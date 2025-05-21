@@ -1,0 +1,16 @@
+{
+	"manifest_version": 1,
+	"id": "com.example.tagautocomplete",
+	"app_min_version": "3.3",
+	"version": "1.0.0",
+	"name": "tag-autocomplete",
+	"description": "A plugin to autocomplete tags in Joplin.",
+	"author": "metamari",
+	"homepage_url": "",
+	"repository_url": "",
+	"keywords": [],
+	"categories": [],
+	"screenshots": [],
+	"icons": {},
+	"promo_tile": {}
+}
