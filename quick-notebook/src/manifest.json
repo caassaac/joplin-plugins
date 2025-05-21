@@ -1,0 +1,16 @@
+{
+	"manifest_version": 1,
+	"id": "com.example.quicknotebook",
+	"app_min_version": "3.3",
+	"version": "1.0.0",
+	"name": "quick-notebook",
+	"description": "plugin to create a template notebook and note automatically",
+	"author": "metamari",
+	"homepage_url": "",
+	"repository_url": "",
+	"keywords": [],
+	"categories": [],
+	"screenshots": [],
+	"icons": {},
+	"promo_tile": {}
+}
