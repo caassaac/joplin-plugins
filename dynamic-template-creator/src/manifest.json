@@ -1,0 +1,16 @@
+{
+	"manifest_version": 1,
+	"id": "com.example.dynamictemplatecreator",
+	"app_min_version": "3.3",
+	"version": "1.0.0",
+	"name": "dynamic-template-creator",
+	"description": "A joplin plugin to create dynamic templates",
+	"author": "metamari",
+	"homepage_url": "",
+	"repository_url": "",
+	"keywords": [],
+	"categories": [],
+	"screenshots": [],
+	"icons": {},
+	"promo_tile": {}
+}

@@ -1,0 +1,34 @@
+D:\Documents\Projects\joplin-plugins\dynamic-template-creator
+├── .gitignore
+├── .npmignore
+├── GENERATOR_DOC.md
+├── README.md
+├── api
+│   └── many files
+├── dist
+│   ├── index.js
+│   ├── manifest.json
+│   ├── styles
+│   │   ├── styles.css
+│   │   └── styles.js
+│   └── webview
+│       └── webview.js
+├── node_modules
+│   └── many files
+├── package-lock.json
+├── package.json
+├── plugin.config.json
+├── publish
+│   ├── com.example.dynamictemplatecreator.jpl
+│   └── com.example.dynamictemplatecreator.json
+├── src
+│   ├── index.ts
+│   ├── manifest.json
+│   ├── styles
+│   │   └── styles.css
+│   └── webview
+│       └── webview.js
+├── tree.py
+├── tree.txt
+├── tsconfig.json
+└── webpack.config.js
