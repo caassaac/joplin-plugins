@@ -1,0 +1,16 @@
+{
+	"manifest_version": 1,
+	"id": "com.example.focusmode",
+	"app_min_version": "3.3",
+	"version": "1.0.0",
+	"name": "focus-mode",
+	"description": "Focus mode for Joplin desktop",
+	"author": "metamari",
+	"homepage_url": "",
+	"repository_url": "",
+	"keywords": [],
+	"categories": [],
+	"screenshots": [],
+	"icons": {},
+	"promo_tile": {}
+}
