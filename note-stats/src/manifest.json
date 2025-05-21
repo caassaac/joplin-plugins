@@ -1,0 +1,19 @@
+{
+  "manifest_version": 1,
+  "id": "com.example.note-stats",
+  "app_min_version": "3.3",
+  "version": "1.0.0",
+  "name": "note-stats",
+  "description": "A Joplin Plugin to see the stats of a note.",
+  "author": "metamari",
+  "homepage_url": "",
+  "repository_url": "",
+  "keywords": [],
+  "categories": [],
+  "screenshots": [],
+  "icons": {},
+  "promo_tile": {},
+  "views": {
+    "panels": ["noteStatsPanel"]
+  }
+}
