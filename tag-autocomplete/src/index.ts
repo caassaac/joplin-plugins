@@ -1,11 +1,11 @@
 import joplin from "api";
 import { ContentScriptType } from "api/types";
 
-const PLUGIN_ID = "TagSuggestions";
-const LOG_PREFIX = `[${PLUGIN_ID}]`;
-const MSG_GET_TAGS = "getTags" as const;
+export const PLUGIN_ID = "TagSuggestions";
+export const LOG_PREFIX = `[${PLUGIN_ID}]`;
+export const MSG_GET_TAGS = "getTags" as const;
 
-const CONTENT_SCRIPTS: {
+export const CONTENT_SCRIPTS: {
   id: string;
   type: ContentScriptType;
   path: string;
@@ -22,7 +22,7 @@ const CONTENT_SCRIPTS: {
   },
 ];
 
-async function fetchActiveTagTitles(): Promise<string[]> {
+export async function fetchActiveTagTitles(): Promise<string[]> {
   console.debug(LOG_PREFIX, "Obteniendo tags activos…");
   const result = await joplin.data.get(["tags"], { fields: ["id", "title"] });
   const active: string[] = [];
@@ -38,19 +38,19 @@ async function fetchActiveTagTitles(): Promise<string[]> {
   return active;
 }
 
-joplin.plugins.register({
-  onStart: async () => {
-    for (const cs of CONTENT_SCRIPTS) {
-      await joplin.contentScripts.register(cs.type, cs.id, cs.path);
-      console.info(LOG_PREFIX, `Content script registrado: ${cs.id}`);
-    }
+export async function onStart() {
+  for (const cs of CONTENT_SCRIPTS) {
+    await joplin.contentScripts.register(cs.type, cs.id, cs.path);
+    console.info(LOG_PREFIX, `Content script registrado: ${cs.id}`);
+  }
 
-    for (const { id } of CONTENT_SCRIPTS) {
-      joplin.contentScripts.onMessage(id, async (message: unknown) => {
-        if (message === MSG_GET_TAGS) {
-          return await fetchActiveTagTitles();
-        }
-      });
-    }
-  },
-});
+  for (const { id } of CONTENT_SCRIPTS) {
+    joplin.contentScripts.onMessage(id, async (message: unknown) => {
+      if (message === MSG_GET_TAGS) {
+        return await fetchActiveTagTitles();
+      }
+    });
+  }
+}
+
+joplin.plugins.register({ onStart });
