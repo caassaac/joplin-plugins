@@ -1,0 +1,6 @@
+{
+  "extraScripts": [
+    "content-scripts/tag-suggestions-cm6.ts",
+    "content-scripts/tag-suggestions-cm5.ts"
+  ]
+}
