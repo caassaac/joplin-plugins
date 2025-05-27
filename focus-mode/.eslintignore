@@ -1,0 +1,9 @@
+dist/
+node_modules/
+tests/
+api/
+**/manifest.json
+**/*.jpl
+tree.*
+GENERATOR_DOC.md
+.vscode/

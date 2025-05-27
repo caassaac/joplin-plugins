@@ -1,27 +1,39 @@
+import { autocompletion, CompletionContext } from "@codemirror/autocomplete";
+
 const MSG_GET_TAGS = "getTags" as const;
+
+export type CM6Wrapper = {
+  cm6?: boolean;
+  addExtension: (ext: unknown) => void;
+};
+
+export type CompletionOption = { label: string; type: "tag" };
 
 export default (context: {
   postMessage: (msg: typeof MSG_GET_TAGS) => Promise<string[]>;
 }) => ({
-  plugin: async (cm: any) => {
-    if ((cm as any).cm6) return;
+  plugin: (cmWrapper: CM6Wrapper) => {
+    if (!cmWrapper.cm6) return;
 
-    cm.defineOption("tagSuggestions", false, () => {
-      cm.on("inputRead", async (_cm: any, change: any) => {
-        if (change.text[0] !== "#") return;
+    cmWrapper.addExtension(
+      autocompletion({
+        override: [
+          async (ctx: CompletionContext) => {
+            const m = ctx.matchBefore(/#[^#\s]*/);
+            if (!m) return null;
 
-        const tags: string[] = await context.postMessage(MSG_GET_TAGS);
+            const tags = await context.postMessage(MSG_GET_TAGS);
+            const from = m.from + 1;
+            const query = m.text.slice(1).toLowerCase();
 
-        (_cm as any).showHint({
-          hint: () => ({
-            from: _cm.getCursor(),
-            to: _cm.getCursor(),
-            list: tags.map((t) => ({ text: t })),
-          }),
-        });
-      });
-    });
+            const options: CompletionOption[] = tags
+              .filter((t) => t.toLowerCase().startsWith(query))
+              .map((t) => ({ label: t, type: "tag" }));
 
-    cm.setOption("tagSuggestions", true);
+            return { from, options };
+          },
+        ],
+      })
+    );
   },
 });

@@ -5,7 +5,9 @@ const PANEL_ID = "focusModePanel";
 const STYLE_PATH = "./styles/styles.css";
 const SCRIPT_PATH = "./webview/webview.js";
 
-export let focusEnabled = false;
+export const state = {
+  focusEnabled: false,
+};
 
 interface ToggleFocusMessage {
   name: "toggleFocus";
@@ -32,16 +34,23 @@ export async function onStart() {
     async (message: ToggleFocusMessage) => {
       if (message.name !== "toggleFocus") return;
 
-      focusEnabled = !focusEnabled;
+      try {
+        state.focusEnabled = !state.focusEnabled;
 
-      await joplin.commands.execute("toggleSideBar");
-      await joplin.commands.execute("toggleNoteList");
+        await Promise.all([
+          joplin.commands.execute("toggleSideBar"),
+          joplin.commands.execute("toggleNoteList"),
+        ]);
 
-      console.info(
-        `[FocusModePlugin] Modo enfoque ${
-          focusEnabled ? "ACTIVADO" : "DESACTIVADO"
-        }`
-      );
+        console.info(
+          `[FocusModePlugin] Modo enfoque ${
+            state.focusEnabled ? "ACTIVADO" : "DESACTIVADO"
+          }`
+        );
+      } catch (error) {
+        console.error("[FocusModePlugin] Error executing commands:", error);
+        state.focusEnabled = !state.focusEnabled;
+      }
     }
   );
 }

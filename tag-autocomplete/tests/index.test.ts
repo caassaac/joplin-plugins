@@ -38,6 +38,13 @@ describe("Tag Autocomplete Plugin — fetchActiveTagTitles()", () => {
     expect(dbg).toHaveBeenCalledWith(LOG_PREFIX, "Tags activos:", []);
     dbg.mockRestore();
   });
+
+  it("returns empty array if no tags exist", async () => {
+    (joplin.data.get as jest.Mock).mockResolvedValueOnce({ items: [] });
+
+    const active = await fetchActiveTagTitles();
+    expect(active).toEqual([]);
+  });
 });
 
 describe("Tag Autocomplete Plugin — onStart()", () => {
@@ -108,5 +115,26 @@ describe("Tag Autocomplete Plugin — onStart()", () => {
       ["tags", "tag2_id", "notes"],
       expect.objectContaining({ limit: 1 })
     );
+  });
+
+  it("logs info for each registered content script", async () => {
+    const infoSpy = jest.spyOn(console, "info").mockImplementation();
+    await onStart();
+
+    for (const cs of CONTENT_SCRIPTS) {
+      expect(infoSpy).toHaveBeenCalledWith(
+        LOG_PREFIX,
+        `Content script registrado: ${cs.id}`
+      );
+    }
+
+    infoSpy.mockRestore();
+  });
+
+  it("message handler ignores unknown messages", async () => {
+    await onStart();
+    const id = CONTENT_SCRIPTS[0].id;
+    const result = await callbacks[id][0]("unexpected");
+    expect(result).toBeUndefined();
   });
 });
