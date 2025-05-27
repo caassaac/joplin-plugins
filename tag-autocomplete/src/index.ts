@@ -22,16 +22,28 @@ export const CONTENT_SCRIPTS: {
   },
 ];
 
+interface Tag {
+  id: string;
+  title: string;
+}
+
+interface NoteResult {
+  items: unknown[];
+}
+
 export async function fetchActiveTagTitles(): Promise<string[]> {
   console.debug(LOG_PREFIX, "Obteniendo tags activos…");
-  const result = await joplin.data.get(["tags"], { fields: ["id", "title"] });
-  const active: string[] = [];
 
-  for (const tag of result.items as { id: string; title: string }[]) {
+  const result = await joplin.data.get(["tags"], { fields: ["id", "title"] });
+  const tags = result.items as Tag[];
+
+  const active: string[] = [];
+  for (const tag of tags) {
     const notes = await joplin.data.get(["tags", tag.id, "notes"], {
       limit: 1,
     });
-    if ((notes.items as any[]).length > 0) active.push(tag.title);
+    const noteResult = notes as NoteResult;
+    if (noteResult.items.length > 0) active.push(tag.title);
   }
 
   console.debug(LOG_PREFIX, "Tags activos:", active);
@@ -45,11 +57,14 @@ export async function onStart() {
   }
 
   for (const { id } of CONTENT_SCRIPTS) {
-    joplin.contentScripts.onMessage(id, async (message: unknown) => {
-      if (message === MSG_GET_TAGS) {
-        return await fetchActiveTagTitles();
+    joplin.contentScripts.onMessage(
+      id,
+      async (message: typeof MSG_GET_TAGS) => {
+        if (message === MSG_GET_TAGS) {
+          return await fetchActiveTagTitles();
+        }
       }
-    });
+    );
   }
 }
 

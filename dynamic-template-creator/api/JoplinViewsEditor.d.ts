@@ -1,5 +1,5 @@
-import Plugin from '../Plugin';
-import { ActivationCheckCallback, ViewHandle, UpdateCallback } from './types';
+import Plugin from "../Plugin";
+import { ActivationCheckCallback, ViewHandle, UpdateCallback } from "./types";
 /**
  * Allows creating alternative note editors. You can create a view to handle loading and saving the
  * note, and do your own rendering.
@@ -38,51 +38,54 @@ import { ActivationCheckCallback, ViewHandle, UpdateCallback } from './types';
  * using this API.
  */
 export default class JoplinViewsEditors {
-    private store;
-    private plugin;
-    private activationCheckHandlers_;
-    constructor(plugin: Plugin, store: any);
-    private controller;
-    /**
-     * Creates a new editor view
-     */
-    create(id: string): Promise<ViewHandle>;
-    /**
-     * Sets the editor HTML content
-     */
-    setHtml(handle: ViewHandle, html: string): Promise<string>;
-    /**
-     * Adds and loads a new JS or CSS file into the panel.
-     */
-    addScript(handle: ViewHandle, scriptPath: string): Promise<void>;
-    /**
-     * See [[JoplinViewPanels]]
-     */
-    onMessage(handle: ViewHandle, callback: Function): Promise<void>;
-    /**
-     * Emitted when the editor can potentially be activated - this is for example when the current
-     * note is changed, or when the application is opened. At that point you should check the
-     * current note and decide whether your editor should be activated or not. If it should, return
-     * `true`, otherwise return `false`.
-     */
-    onActivationCheck(handle: ViewHandle, callback: ActivationCheckCallback): Promise<void>;
-    /**
-     * Emitted when your editor content should be updated. This is for example when the currently
-     * selected note changes, or when the user makes the editor visible.
-     */
-    onUpdate(handle: ViewHandle, callback: UpdateCallback): Promise<void>;
-    /**
-     * See [[JoplinViewPanels]]
-     */
-    postMessage(handle: ViewHandle, message: any): void;
-    /**
-     * Tells whether the editor is active or not.
-     */
-    isActive(handle: ViewHandle): Promise<boolean>;
-    /**
-     * Tells whether the editor is effectively visible or not. If the editor is inactive, this will
-     * return `false`. If the editor is active and the user has switched to it, it will return
-     * `true`. Otherwise it will return `false`.
-     */
-    isVisible(handle: ViewHandle): Promise<boolean>;
+  private store;
+  private plugin;
+  private activationCheckHandlers_;
+  constructor(plugin: Plugin, store: any);
+  private controller;
+  /**
+   * Creates a new editor view
+   */
+  create(id: string): Promise<ViewHandle>;
+  /**
+   * Sets the editor HTML content
+   */
+  setHtml(handle: ViewHandle, html: string): Promise<string>;
+  /**
+   * Adds and loads a new JS or CSS file into the panel.
+   */
+  addScript(handle: ViewHandle, scriptPath: string): Promise<void>;
+  /**
+   * See [[JoplinViewPanels]]
+   */
+  onMessage(handle: ViewHandle, callback: Function): Promise<void>;
+  /**
+   * Emitted when the editor can potentially be activated - this is for example when the current
+   * note is changed, or when the application is opened. At that point you should check the
+   * current note and decide whether your editor should be activated or not. If it should, return
+   * `true`, otherwise return `false`.
+   */
+  onActivationCheck(
+    handle: ViewHandle,
+    callback: ActivationCheckCallback
+  ): Promise<void>;
+  /**
+   * Emitted when your editor content should be updated. This is for example when the currently
+   * selected note changes, or when the user makes the editor visible.
+   */
+  onUpdate(handle: ViewHandle, callback: UpdateCallback): Promise<void>;
+  /**
+   * See [[JoplinViewPanels]]
+   */
+  postMessage(handle: ViewHandle, message: any): void;
+  /**
+   * Tells whether the editor is active or not.
+   */
+  isActive(handle: ViewHandle): Promise<boolean>;
+  /**
+   * Tells whether the editor is effectively visible or not. If the editor is inactive, this will
+   * return `false`. If the editor is active and the user has switched to it, it will return
+   * `true`. Otherwise it will return `false`.
+   */
+  isVisible(handle: ViewHandle): Promise<boolean>;
 }

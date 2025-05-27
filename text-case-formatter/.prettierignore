@@ -1,0 +1,11 @@
+dist/
+node_modules/
+tests/
+api/
+**/manifest.json
+**/*.jpl
+tree.*
+package-lock.json
+*.md
+webpack.config.js
+jest.config.js

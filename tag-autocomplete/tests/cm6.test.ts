@@ -1,39 +1,72 @@
 import cm6Factory from "../src/content-scripts/tag-suggestions-cm6";
-import { MSG_GET_TAGS } from "../src/index";
-import { autocompletion } from "@codemirror/autocomplete";
+import {
+  autocompletion,
+  type CompletionContext,
+} from "@codemirror/autocomplete";
 
+// Mock autocompletion to return the passed config
 jest.mock("@codemirror/autocomplete", () => ({
-  autocompletion: jest.fn(() => "mocked-extension"),
+  autocompletion: jest.fn((config) => config),
 }));
 
 describe("tag-suggestions-cm6 plugin", () => {
-  it("adds an autocompletion extension when cmWrapper.cm6 is truthy", () => {
-    const context = {
-      postMessage: jest.fn().mockResolvedValue(["foo", "bar"]),
-    };
-    const extObj = cm6Factory(context);
+  let context: { postMessage: jest.Mock };
+  let cmWrapper: any;
+  let extObj: ReturnType<typeof cm6Factory>;
 
-    const cmWrapper: any = {
-      cm6: true,
-      addExtension: jest.fn(),
-    };
-
+  beforeEach(() => {
+    jest.resetAllMocks();
+    context = { postMessage: jest.fn() };
+    extObj = cm6Factory(context);
+    cmWrapper = { cm6: true, addExtension: jest.fn() };
     extObj.plugin(cmWrapper);
+  });
 
-    expect(autocompletion).toHaveBeenCalledWith({
-      override: expect.any(Array),
+  it("registers an autocompletion extension", () => {
+    expect(autocompletion).toHaveBeenCalled();
+    expect(cmWrapper.addExtension).toHaveBeenCalled();
+  });
+
+  it("override callback returns null when no matchBefore", async () => {
+    const config = (autocompletion as jest.Mock).mock.calls[0][0];
+    const overrideFn = config.override[0] as (
+      ctx: CompletionContext
+    ) => Promise<null>;
+    const fakeCtx = { matchBefore: jest.fn().mockReturnValue(null) } as any;
+
+    const result = await overrideFn(fakeCtx);
+    expect(result).toBeNull();
+    expect(context.postMessage).not.toHaveBeenCalled();
+  });
+
+  it("override callback returns suggestions when tag matches", async () => {
+    const tags = ["One", "Two", "oneMore"];
+    context.postMessage.mockResolvedValue(tags);
+
+    const config = (autocompletion as jest.Mock).mock.calls[0][0];
+    const overrideFn = config.override[0] as (
+      ctx: CompletionContext
+    ) => Promise<any>;
+    const fakeMatch = { from: 3, text: "#On" };
+    const fakeCtx = {
+      matchBefore: jest.fn().mockReturnValue(fakeMatch),
+    } as any;
+
+    const result = await overrideFn(fakeCtx);
+    expect(context.postMessage).toHaveBeenCalledWith("getTags");
+    expect(result).toEqual({
+      from: fakeMatch.from + 1,
+      options: [
+        { label: "One", type: "tag" },
+        { label: "oneMore", type: "tag" },
+      ],
     });
-
-    expect(cmWrapper.addExtension).toHaveBeenCalledWith("mocked-extension");
   });
 
   it("does nothing when cmWrapper.cm6 is falsy", () => {
-    const context = { postMessage: jest.fn() };
-    const extObj = cm6Factory(context);
-    const cmWrapper: any = { cm6: false, addExtension: jest.fn() };
-
-    extObj.plugin(cmWrapper);
-
-    expect(cmWrapper.addExtension).not.toHaveBeenCalled();
+    const falsyWrapper: any = { cm6: false, addExtension: jest.fn() };
+    const ext = cm6Factory({ postMessage: jest.fn() });
+    ext.plugin(falsyWrapper);
+    expect(falsyWrapper.addExtension).not.toHaveBeenCalled();
   });
 });

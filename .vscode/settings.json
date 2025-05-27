@@ -1,0 +1,16 @@
+{
+  "sonarlint.connectedMode.project": {
+    "connectionId": "",
+    "projectKey": ""
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "eslint.validate": ["typescript", "javascript"],
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "prettier.enable": true,
+  "files.eol": "\n", // Force LF line endings
+  "eslint.options": { "fix": true } // Auto-fix on save
+}
